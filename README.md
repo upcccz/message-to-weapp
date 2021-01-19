@@ -1,5 +1,7 @@
 ### 流程
 
+![](./images/5.jpg)
+
 1、获取access_token，[文档](https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html)
 
 ```
@@ -80,7 +82,7 @@ POST https://api.weixin.qq.com/wxa/generatescheme?access_token=ACCESS_TOKEN
 + 链接在微信端点击没有打开小程序的能力，只支持在微信外部（短信、QQ、浏览器、任意支持外部链接点击打开浏览器的地方）打开小程序。
 + 需要有短信发送平台支持，才能完成短信打开小程序功能。
 
-可以使用微信开放标签，但是需要再**向后台进行单独的鉴权**。并对手机系统和微信版本均有要求，微信版本要求为：7.0.12及以上。 系统版本要求为：iOS 10.3及以上、Android 5.0及以上。而且跳转到h5页面之后**需要用户手动点击打开**。 [参考文档](./微信开放标签.md)
+可以使用微信开放标签，但是需要再**向后台进行单独的鉴权**。并对手机系统和微信版本均有要求，微信版本要求为：7.0.12及以上。 系统版本要求为：iOS 10.3及以上、Android 5.0及以上。而且跳转到h5页面之后**需要用户手动点击打开**。 [参考文档](./wexin-open-tag.md)
 
 #### 自定义开发：部署在小程序云开发静态网站
 
