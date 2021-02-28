@@ -1,0 +1,150 @@
+<html>
+
+<head>
+  <title>订阅测试</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+  <!-- weui 样式 -->
+  <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.4.1/weui.min.css">
+  </link>
+  <!-- 公众号 JSSDK -->
+  <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+</head>
+
+<body>
+  <div class="page">
+    <!-- replace your templateid -->
+    <wx-open-subscribe template="templateIdForOne" id="subscribe-btn">
+      <template slot="style">
+        <style>
+          .subscribe-btn {
+            color: #fff;
+            background-color: #07c160;
+            display: inline-block;
+            padding: 50px;
+          }
+        </style>
+      </template>
+      <template>
+        <button class="subscribe-btn">
+          一次性模版消息订阅
+        </button>
+      </template>
+    </wx-open-subscribe>
+
+    <!-- replace your templateid -->
+    <wx-open-subscribe template="templateIdForLong" id="subscribe-btn2">
+      <template slot="style">
+        <style>
+          .subscribe-btn {
+            color: #fff;
+            background-color: #07c160;
+            display: inline-block;
+            padding: 50px;
+          }
+        </style>
+      </template>
+      <template>
+        <button class="subscribe-btn">
+          长期订阅
+        </button>
+      </template>
+    </wx-open-subscribe>
+  </div>
+
+  <script>
+    // 使用开放标签打开小程序时调用，注入wx.config的配置信息,使用小程序云开发静态网站托管的网页可以绕过鉴权，公众号需要后端接口配合返回鉴权参数
+    const getWXConfig = async () => {
+      const thisPageUrl = window.location.href.split('#')[0];
+      // replace your api url
+      const response = await fetch('your-api-url') // 获取腾讯jssdk签名
+      const res = await response.json();
+      const data = res.url;
+
+      const config = {
+        // replace your appid
+        appId: 'your-appid', // 已认证的小程序appid或已认证的服务号appid
+        timestamp: 0, // 必填，使用小程序云开发静态网站托管的网页填任意数字即可,无须鉴权
+        nonceStr: 'nonceStr', // 必填，使用小程序云开发静态网站托管的网页填任意非空字符串即可,无须鉴权
+        signature: 'signature', // 必填，使用小程序云开发静态网站托管的网页填任意非空字符串即可,无须鉴权
+      }
+
+      if (data) {
+        config.appId = data.appId;
+        config.timestamp = data.timestamp;
+        config.nonceStr = data.nonceStr;
+        config.signature = data.signature;
+      }
+
+      return config
+    }
+    
+    const start = async () => {
+
+      var btn = document.getElementById('subscribe-btn');
+      btn.addEventListener('success', function (e) {
+        console.log('success', e.detail);
+      });
+      btn.addEventListener('error', function (e) {
+        console.log('fail', e.detail);
+      });
+
+      var btn2 = document.getElementById('subscribe-btn2');
+      btn2.addEventListener('success', function (e) {
+        console.log('success', e.detail);
+      });
+      btn2.addEventListener('error', function (e) {
+        console.log('fail', e.detail);
+      });
+
+      if (!isOk()) {
+        alert('您的手机不支持在微信内部跳转，要求微信7.0.12及以上。 系统版本要求为：iOS 10.3及以上、Android 5.0及以上')
+      }
+
+      const config = await getWXConfig()
+      wx.config({
+        ...config,
+        jsApiList: ['chooseImage'], // 安卓上必填一个，随机即可
+        openTagList: ['wx-open-subscribe'], // 填入打开小程序的开放标签名
+      })
+    }
+
+    const isOk = function () {
+      var wechatInfo = navigator.userAgent.match(/MicroMessenger\/([\d\\.]+)/i);
+      var ua = navigator.userAgent.toLowerCase();
+
+      if (!wechatInfo) {
+        return false;
+      }
+
+      if (wechatInfo[1] < '7.0.12') {
+        return false;
+      }
+
+      if (/android/i.test(navigator.userAgent)) {
+        const test = /android\s([\w.]+)/;
+        const match = test.exec(ua);
+
+        let version = match && match[1].split('.')[0];
+        version = Number(version);
+
+        return version >= 5;
+      }
+
+      if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+        const test2 = /os\s([\w_]+)/;
+        const match = test2.exec(ua);
+        var version = match && match[1].split('_')[0] + '.' + match[1].split('_')[1];
+
+        version = Number(version);
+        return version >= 10.4;
+      }
+
+      return true;
+    }
+
+    start()
+  </script>
+</body>
+
+</html>
